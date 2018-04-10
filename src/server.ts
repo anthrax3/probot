@@ -3,7 +3,7 @@ import * as express from 'express'
 import * as path from 'path'
 
 // Teach express to properly handle async errors
-require('express-async-errors')
+import 'express-async-errors'
 
 import {logRequest} from './middleware/logging'
 

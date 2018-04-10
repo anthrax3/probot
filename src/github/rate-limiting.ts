@@ -1,4 +1,4 @@
-const Bottleneck = require('bottleneck')
+import Bottleneck from 'bottleneck'
 
 export const addRateLimiting = (octokit, limiter) => {
   if (!limiter) {

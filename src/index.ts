@@ -1,27 +1,27 @@
+import Webhooks = require('@octokit/webhooks')
 import * as Logger from 'bunyan'
 import * as cacheManager from 'cache-manager'
 import * as express from 'express'
 import {Context} from './context'
 import {createApp} from './github-app'
 import {logger} from './logger'
+import logRequestErrors from './middleware/log-request-errors'
 import {resolve} from './resolver'
 import {createRobot, Robot, WebhookEvent} from './robot'
 import {createServer} from './server'
 import {createWebhookProxy} from './webhook-proxy'
 
-const Webhooks = require('@octokit/webhooks')
-const logRequestErrors = require('./middleware/log-request-errors')
+import defaultPlugin = require('./plugins/default')
+import sentryPlugin = require('./plugins/sentry')
+import statsPlugin = require('./plugins/stats')
+
 
 const cache = cacheManager.caching({
   store: 'memory',
   ttl: 60 * 60 // 1 hour
 })
 
-const defaultApps = [
-  require('./plugins/sentry'),
-  require('./plugins/stats'),
-  require('./plugins/default')
-]
+const defaultApps = [ sentryPlugin, statsPlugin, defaultPlugin ]
 
 export const createProbot = (options: Options) => {
   options.webhookPath = options.webhookPath || '/'
